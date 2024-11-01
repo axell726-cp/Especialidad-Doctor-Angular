@@ -1,0 +1,81 @@
+<app-sidebar></app-sidebar>
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<p-card header="Doctor" class="mb-4 shadow-lg p-4 rounded-lg">
+    <div class="flex justify-end">
+        <button pButton (click)="showDialogCreate()" label="Nuevo Doctor"
+            class="p-button-outlined p-button-info w-auto text-sm sm:text-base"></button>
+    </div>
+</p-card>
+
+<p-panel header="Lista de Doctores" class="mb-4 shadow-md p-4 rounded-lg">
+    <div>
+        <p-table [value]="doctores" [tableStyle]="{ 'min-width': '50rem' }" class="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-left">Nombres</th>
+                    <th class="text-left">Apellidos</th>
+                    <th class="text-left">Especialidad</th>
+                    <th class="text-center">Opciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-doctor>
+                <tr class="hover:bg-gray-100 transition-colors duration-200">
+                    <td class="text-center p-3">{{ doctor.id }}</td>
+                    <td class="p-3">{{ doctor.nombres }}</td>
+                    <td class="p-3">{{ doctor.apellidos }}</td>
+                    <td class="p-3">{{ doctor.especialidad.nombre }}</td>
+                    <td class="text-center">
+                        <button pButton pRipple type="button" icon="pi pi-pencil" (click)="showDialogEdit(doctor.id)"
+                            class="p-button-rounded p-button-text w-5 h-5 text-green-600 hover:bg-green-100 transition-all duration-200 transform hover:scale-105 shadow-sm mr-2">
+                        </button>
+
+                        <button pButton pRipple type="button" icon="pi pi-trash" (click)="deleteDoctor(doctor.id)"
+                            class="p-button-rounded p-button-text w-5 h-5 text-red-600 hover:bg-red-100 transition-all duration-200 transform hover:scale-105 shadow-sm">
+                        </button>
+
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-panel>
+
+<p-dialog [(visible)]="visible" [header]="titulo" [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px', fontSize: 'clamp(0.8rem, 2vw, 1.2rem)'}"
+    styleClass="custom-dialog shadow-lg rounded-lg">
+    <div class="p-fluid space-y-4 p-4">
+        <div class="p-field">
+            <label for="nombres" class="font-semibold text-gray-800 text-sm sm:text-base">Nombres</label>
+            <p></p>
+            <input type="text" pInputText id="nombres" [(ngModel)]="doctor.nombres" required
+                class="border-gray-300 rounded-lg shadow-sm p-2 text-sm sm:text-base w-full" />
+                <p></p>
+        </div>
+        <div class="p-field">
+            <label for="apellidos" class="font-semibold text-gray-800 text-sm sm:text-base">Apellidos</label>
+            <p></p>
+            <input type="text" pInputText id="apellidos" [(ngModel)]="doctor.apellidos" required
+                class="border-gray-300 rounded-lg shadow-sm p-2 text-sm sm:text-base w-full" />
+                <p></p>
+        </div>
+        <div class="p-field">
+            <label for="especialidad" class="font-semibold text-gray-800 text-sm sm:text-base">Especialidad</label>
+            <p></p>
+            <p-dropdown [options]="especialidadOpttion" [(ngModel)]="doctor.especialidad" optionLabel="nombre"
+                placeholder="Seleccionar Especialidad" [panelStyle]="{'max-height': '200px', 'overflow-y': 'auto'}"
+                [appendTo]="'body'" [baseZIndex]="10000" styleClass="text-sm sm:text-base w-full">
+            </p-dropdown>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex flex-col sm:flex-row justify-end gap-2">
+            <p-button label="Cancelar" styleClass="p-button-secondary w-full sm:w-auto text-xs sm:text-sm"
+                (click)="visible = false" />
+            <p-button [label]="opc" (click)="op === 0 ? addDoctor() : updateDoctor()"
+                styleClass="p-button-primary w-full sm:w-auto text-xs sm:text-sm" />
+        </div>
+    </ng-template>
+</p-dialog>
